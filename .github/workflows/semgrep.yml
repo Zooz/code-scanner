@@ -23,11 +23,7 @@ jobs:
       - name: Fetch project source with GitHub Actions Checkout.
         uses: actions/checkout@v3
       - run: |
-          git config --global --add safe.directory /__w/predator-runner/predator-runner
-          git status
-      - run: |
-          echo "github.ref_name: ${{ github.ref_name }}"
-          echo "github.action_ref: ${{ github.action_ref }}"
+          echo ${{ github }}
       # - name: Pull semgrep rule repo
       #   run: |
       #     git clone https://github.com/Zooz/code-scanner.git

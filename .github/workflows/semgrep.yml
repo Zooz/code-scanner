@@ -27,7 +27,9 @@ jobs:
           git clone https://github.com/Zooz/code-scanner.git
           cd code-scanner
           git checkout ${{ inputs.codeScannerRef }}
-          cp -r code-scanner/* .
+          cp -r * ../
+          cd ..
+          ls -la
       - name: Generate 1 semgrep config named `semgrepRulles.yml`
         run: |
           pip install pyyaml

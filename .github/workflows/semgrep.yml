@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: returntocorp/semgrep
-    if: (github.actor != 'dependabot[bot]') # Skip any PR created by dependabot to avoid permission issues
     steps:
       - name: Generate 1 semgrep config named `semgrepRulles.yml`
         run: |

@@ -2,6 +2,11 @@ name: Semgrep
 
 on:
   workflow_call:
+    inputs:
+      codeScannerRef:
+        required: false
+        type: string
+        default: 'main'
 
 jobs:
   semgrep:
@@ -17,10 +22,14 @@ jobs:
     steps:
       - name: Fetch project source with GitHub Actions Checkout.
         uses: actions/checkout@v3
-      - name: Setup python 3
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.8"
+      - name: Pull semgrep rule repo
+        run: |
+          git clone https://github.com/Zooz/code-scanner.git
+          cd code-scanner
+          git checkout ${{ inputs.codeScannerRef }}
+          cp -r * ../
+          cd ..
+          rm -rf code-scanner/
       - name: Generate 1 semgrep config named `semgrepRulles.yml`
         run: |
           pip install pyyaml

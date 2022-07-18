@@ -41,3 +41,7 @@ jobs:
         with:
           sarif_file: results.sarif
         if: always()
+      - name: Check scan result severity
+        run: |
+          cat results.sarif
+ 

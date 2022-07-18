@@ -30,7 +30,6 @@ jobs:
           cp -r * ../
           cd ..
           rm -rf code-scanner/
-          ls -la
       - name: Generate 1 semgrep config named `semgrepRulles.yml`
         run: |
           pip install pyyaml

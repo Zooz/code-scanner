@@ -16,3 +16,173 @@ rules:
   - pattern: "ImpersonateSecurityContext(...)"
   - pattern: "SetThreadToken(...)"
   severity: "ERROR"
+- id: "flawfinder.umask-1"
+  languages:
+  - "c"
+  message: |
+    Ensure that umask is given most restrictive possible setting (e.g.,
+    066 or 077)
+  metadata:
+    cwe: "CWE-732: Ensure that umask is given most restrictive possible setting (e.g.,
+      066 or 077) (CWE-732)"
+  pattern: "umask(...)"
+  severity: "INFO"
+- id: "flawfinder.MultiByteToWideChar-1"
+  languages:
+  - "c"
+  message: |
+    The software does not properly handle when an input contains Unicode encoding.
+  metadata:
+    cwe: "CWE-120: Requires maximum length in CHARACTERS, not bytes (CWE-120)"
+  pattern: "MultiByteToWideChar(...)"
+  severity: "INFO"
+- id: "flawfinder.StrCat-1.StrCatA-1.StrcatW-1.lstrcatA-1.lstrcatW-1.strCatBuff-1.StrCatBuffA-1.StrCatBuffW-1.StrCatChainW-1._tccat-1._mbccat-1._ftcscat-1.StrCatN-1.StrCatNA-1.StrCatNW-1.StrNCat-1.StrNCatA-1.StrNCatW-1.lstrncat-1.lstrcatnA-1.lstrcatnW-1"
+  languages:
+  - "c"
+  message: |
+    Buffer overflow is not checked.
+  metadata:
+    cwe: "CWE-120: Does not check for buffer overflows when concatenating to destination
+      [MS-banned] (CWE-120)"
+  pattern-either:
+  - pattern: "StrCat(...)"
+  - pattern: "StrCatA(...)"
+  - pattern: "StrcatW(...)"
+  - pattern: "lstrcatA(...)"
+  - pattern: "lstrcatW(...)"
+  - pattern: "strCatBuff(...)"
+  - pattern: "StrCatBuffA(...)"
+  - pattern: "StrCatBuffW(...)"
+  - pattern: "StrCatChainW(...)"
+  - pattern: "_tccat(...)"
+  - pattern: "_mbccat(...)"
+  - pattern: "_ftcscat(...)"
+  - pattern: "StrCatN(...)"
+  - pattern: "StrCatNA(...)"
+  - pattern: "StrCatNW(...)"
+  - pattern: "StrNCat(...)"
+  - pattern: "StrNCatA(...)"
+  - pattern: "StrNCatW(...)"
+  - pattern: "lstrncat(...)"
+  - pattern: "lstrcatnA(...)"
+  - pattern: "lstrcatnW(...)"
+  severity: "ERROR"
+- id: "flawfinder.char-1.TCHAR-1.wchar_t-1"
+  languages:
+  - "c"
+  message: |
+    Perform bounds checking, use functions that limit length, or ensure that the size is larger
+    than the maximum possible length.
+  metadata:
+    cwe: "CWE-120: Statically-sized arrays can be improperly restricted, leading to
+      potential overflows or other issues (CWE-119!/CWE-120)"
+  pattern-either:
+  - patterns:
+    - pattern-regex: "(wchar_t) *[a-zA-Z0-9_]+\\[.*\\]"
+    - pattern-not-regex: "(wchar_t) *[a-zA-Z0-9_]+\\[\\](\\s|)\\= *([a-zA-Z]|)(\\s|)(\"|{)(.*)"
+  - patterns:
+    - pattern-regex: "(char) *[a-zA-Z0-9_]+\\[.*\\]"
+    - pattern-not-regex: "(char) *[a-zA-Z0-9_]+\\[\\](\\s|)\\= *([a-zA-Z]|)(\\s|)(\"|{)(.*)"
+  - patterns:
+    - pattern-regex: "(TCHAR) *[a-zA-Z0-9_]+\\[.*\\]"
+    - pattern-not-regex: "(TCHAR) *[a-zA-Z0-9_]+\\[\\](\\s|)\\= *([a-zA-Z]|)(\\s|)(\"|{)(.*)"
+  - patterns:
+    - pattern-regex: "static *(const)? *(wchar_t|char|TCHAR) *[a-zA-Z0-9_]+ *\\[.*\\]\\*(={.*})?"
+  - patterns:
+    - pattern-regex: "(.*|)(\\s|)\\=(\\s|)\\((char.*) (malloc)\\(.*\\[[0-9]+\\].*\\)"
+  severity: "INFO"
+- id: "flawfinder.equal-1.mismatch-1.is_permutation-1"
+  languages:
+  - "c"
+  message: |
+    This function is often discouraged by most C++ coding standards in favor of its safer
+    alternatives provided since C++14. Consider using a form of this function that checks the
+    second iterator before potentially overflowing it.
+  metadata:
+    cwe: "CWE-126: Function does not check the second iterator for over-read conditions
+      (CWE-126)"
+  pattern-either:
+  - pattern: "equal(...)"
+  - pattern: "mismatch(...)"
+  - pattern: "is_permutation(...)"
+  severity: "INFO"
+- id: "flawfinder.fscanf-1.sscanf-1.vsscanf-1.vfscanf-1._ftscanf-1.fwscanf-1.vfwscanf-1.vswscanf-1"
+  languages:
+  - "c"
+  message: |
+    Specify a limit to %s, or use a different input function.
+  metadata:
+    cwe: "CWE-120: The scanf() family's %s operation, without a limit specification,
+      permits buffer overflows (CWE-120, CWE-20)"
+  pattern-either:
+  - pattern: "fscanf(...)"
+  - pattern: "sscanf(...)"
+  - pattern: "vsscanf(...)"
+  - pattern: "vfscanf(...)"
+  - pattern: "_ftscanf(...)"
+  - pattern: "fwscanf(...)"
+  - pattern: "vfwscanf(...)"
+  - pattern: "vswscanf(...)"
+  severity: "ERROR"
+- id: "flawfinder.g_get_home_dir-1"
+  languages:
+  - "c"
+  message: |
+    Check environment variables carefully before using them.
+  metadata:
+    cwe: "CWE-20: This function is synonymous with 'getenv(\"HOME\")';it returns untrustable
+      input if the environment can beset by an attacker.  It can have any content
+      and length, and the same variable can be set more than once (CWE-807, CWE-20)"
+  pattern: "g_get_home_dir(...)"
+  severity: "WARNING"
+- id: "flawfinder.g_get_tmp_dir-1"
+  languages:
+  - "c"
+  message: |
+    Check environment variables carefully before using them.
+  metadata:
+    cwe: "CWE-20: This function is synonymous with 'getenv(\"TMP\")';it returns untrustable
+      input if the environment can beset by an attacker.  It can have any content
+      and length, and the same variable can be set more than once (CWE-807, CWE-20)"
+  pattern: "g_get_tmp_dir(...)"
+  severity: "WARNING"
+- id: "flawfinder.getchar-1.fgetc-1.getc-1.read-1._gettc-1"
+  languages:
+  - "c"
+  message: |
+    CWE-20: Check buffer boundaries if used in a loop including recursive loops
+  metadata:
+    cwe: "CWE-20: Check buffer boundaries if used in a loop including recursive loops
+      (CWE-120, CWE-20)"
+  pattern-either:
+  - pattern: "getchar(...)"
+  - pattern: "fgetc(...)"
+  - pattern: "getc(...)"
+  - pattern: "read(...)"
+  - pattern: "_gettc(...)"
+  severity: "INFO"
+- id: "flawfinder.getenv-1.curl_getenv-1"
+  languages:
+  - "c"
+  message: |
+    Check environment variables carefully before using them.
+  metadata:
+    cwe: "CWE-20: Environment variables are untrustable input if they can be set by
+      an attacker.  They can have any content and length, and the same variable can
+      be set more than once (CWE-807, CWE-20)"
+  pattern-either:
+  - pattern: "getenv(...)"
+  - pattern: "curl_getenv(...)"
+  severity: "WARNING"
+- id: "flawfinder.getopt-1.getopt_long-1"
+  languages:
+  - "c"
+  message: |
+    Check implementation on installation, or limit the size of all string inputs.
+  metadata:
+    cwe: "CWE-120: Some older implementations do not protect against internal buffer
+      overflows (CWE-120, CWE-20)"
+  pattern-either:
+  - pattern: "getopt(...)"
+  - pattern: "getopt_long(...)"
+  severity: "WARNING"

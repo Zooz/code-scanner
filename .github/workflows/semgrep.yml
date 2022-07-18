@@ -25,7 +25,9 @@ jobs:
       - run: |
           git config --global --add safe.directory /__w/predator-runner/predator-runner
           git status
-      - run: echo ${{ github.head_ref }}
+      - run: |
+          echo "github.ref_name: ${{ github.ref_name }}"
+          echo "github.action_ref: ${{ github.action_ref }}"
       # - name: Pull semgrep rule repo
       #   run: |
       #     git clone https://github.com/Zooz/code-scanner.git

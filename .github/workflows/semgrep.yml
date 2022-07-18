@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       code_scanner_ref:
-        required: true
+        required: false
         type: string
         default: 'main'
 

@@ -3,7 +3,7 @@ name: Semgrep
 on:
   workflow_call:
     inputs:
-      code_scanner_ref:
+      codeScannerRef:
         required: false
         type: string
         default: 'main'
@@ -26,7 +26,7 @@ jobs:
         run: |
           git clone https://github.com/Zooz/code-scanner.git
           cd code-scanner
-          git checkout ${{ code_scanner_ref }}
+          git checkout ${{ inputs.codeScannerRef }}
           cp -r code-scanner/* .
       - name: Generate 1 semgrep config named `semgrepRulles.yml`
         run: |

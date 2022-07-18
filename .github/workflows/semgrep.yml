@@ -22,22 +22,23 @@ jobs:
     steps:
       - name: Fetch project source with GitHub Actions Checkout.
         uses: actions/checkout@v3
-      - name: Pull semgrep rule repo
-        run: |
-          git clone https://github.com/Zooz/code-scanner.git
-          cd code-scanner
-          git checkout ${{ inputs.codeScannerRef }}
-          cp -r * ../
-          cd ..
-          rm -rf code-scanner/
-      - name: Generate 1 semgrep config named `semgrepRulles.yml`
-        run: |
-          pip install pyyaml
-          python scripts/config_combiner.py
-      - name: Run semgrep
-        run: semgrep scan --sarif -o results.sarif --config semgrep_rules/semgrepRulles.yml
-      - name: Upload SARIF file for GitHub Advanced Security Dashboard
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: results.sarif
-        if: always()
+      - run: git status && git branch
+      # - name: Pull semgrep rule repo
+      #   run: |
+      #     git clone https://github.com/Zooz/code-scanner.git
+      #     cd code-scanner
+      #     git checkout ${{ inputs.codeScannerRef }}
+      #     cp -r * ../
+      #     cd ..
+      #     rm -rf code-scanner/
+      # - name: Generate 1 semgrep config named `semgrepRulles.yml`
+      #   run: |
+      #     pip install pyyaml
+      #     python scripts/config_combiner.py
+      # - name: Run semgrep
+      #   run: semgrep scan --sarif -o results.sarif --config semgrep_rules/semgrepRulles.yml
+      # - name: Upload SARIF file for GitHub Advanced Security Dashboard
+      #   uses: github/codeql-action/upload-sarif@v2
+      #   with:
+      #     sarif_file: results.sarif
+      #   if: always()

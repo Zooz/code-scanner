@@ -7,9 +7,9 @@ on:
         required: false
         type: string
         default: 'main'
-    secrets:
-      slackUrl:
-        required: true
+    # secrets:
+    #   slackUrl:
+    #     required: true
 
 jobs:
   semgrep:
@@ -42,7 +42,7 @@ jobs:
       - name: Send Slack notification
         run: |
           python scripts/slack.py \
-            --url "${{ inputs.slackUrl }}" \
+            --url "${{ secrets.SEMGREP_SLACK_ALERT }}" \
             --title "Github Action Code Scan" \
             --message "Repo: ${{ github.repository }}, has failed the semgrep scan" \
             --username "Github Actions" \

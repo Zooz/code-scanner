@@ -47,7 +47,7 @@ jobs:
           #   --message "Repo: ${{ github.repository }}, has failed the semgrep scan" \
           #   --username "Github Actions" \
           #   --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          echo "${{ inputs.slackUrl }}" > boris
+          echo "${{ secrets.slackUrl }}" > boris
           cat boris
         if: failure()
       - name: Upload SARIF file for GitHub Advanced Security Dashboard

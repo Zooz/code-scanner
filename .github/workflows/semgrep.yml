@@ -7,6 +7,10 @@ on:
         required: false
         type: string
         default: 'main'
+      slackUrl:
+        required: true
+        type: string
+        default: 'none'
 
 jobs:
   semgrep:

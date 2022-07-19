@@ -31,15 +31,18 @@ slack_data = {
             "fields": [
                 {
                     "title": args.title,
-                    "value": args.message
+                    "value": args.message,
+                    "short": "true"
                 },
                 {
                     "title": "Action URL",
-                    "value": args.actionLink
+                    "value": args.actionLink,
+                    "short": "true"
                 },
                 {
                     "title": "Branch",
-                    "value": args.branch
+                    "value": args.branch,
+                    "short": "true"
                 }
             ]
         }

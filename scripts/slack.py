@@ -32,7 +32,7 @@ slack_data = {
                 {
                     "title": args.title,
                     "value": args.message,
-                    "short": "true"
+                    "short": "false"
                 },
                 {
                     "title": "Action URL",

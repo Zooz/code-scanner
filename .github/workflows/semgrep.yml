@@ -44,7 +44,7 @@ jobs:
           python scripts/slack.py \
             --url "${{ secrets.SEMGREP_SLACK_ALERT }}" \
             --title "Github Action Code Scan" \
-            --message "Repo: ${{ github.repository }}, has failed the semgrep scan" \
+            --message "Repo: `${{ github.repository }}`, has failed the semgrep scan" \
             --username "Github Actions" \
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         if: failure()

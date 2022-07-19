@@ -39,7 +39,7 @@ jobs:
       - name: Send Slack notification
         run: |
           python scripts/slack.py \
-            --url "${SLACK_URL}" \
+            --url "${{ inputs.slackUrl }}" \
             --title "Github Action Code Scan" \
             --message "Repo: ${{ github.repository }}, has failed the semgrep scan" \
             --username "Github Actions" \

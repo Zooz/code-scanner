@@ -7,10 +7,9 @@ on:
         required: false
         type: string
         default: 'main'
+    secrets:
       slackUrl:
         required: true
-        type: string
-        default: 'none'
 
 jobs:
   semgrep:

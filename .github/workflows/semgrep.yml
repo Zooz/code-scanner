@@ -39,11 +39,11 @@ jobs:
       - name: Send Slack notification
         run: |
           python scripts/slack.py \
-            --url "https://hooks.slack.com/services/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" \
+            --url "${{ secrets.semgrep_slack_alert }}" \
             --title "Github Action Code Scan" \
             --message "Repo: ${{ github.repository }}, has failed the semgrep scan" \
             --username "Github Actions" \
-            --actionLink ${{ github.server_url }}/${{ github.repository }}/runs/${{ github.run_id }}
+            --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
         if: failure()
       - name: Upload SARIF file for GitHub Advanced Security Dashboard

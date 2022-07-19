@@ -16,6 +16,8 @@ parser.add_argument('--iconEmoji', help="Emoji to send in the alert", default=":
 parser.add_argument('--channel', help="To which channel send the alert", default="#alert-test")
 parser.add_argument('--color', help="The color of the message", default="danger")
 parser.add_argument('--actionLink', help="The link to the github action")
+parser.add_argument('--branch', help="The branch name")
+
 args = parser.parse_args()
 
 
@@ -34,6 +36,10 @@ slack_data = {
                 {
                     "title": "Action URL",
                     "value": args.actionLink
+                },
+                {
+                    "title": "Branch",
+                    "value": args.branch
                 }
             ]
         }

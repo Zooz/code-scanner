@@ -63,9 +63,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+        if: failure()
       - name: Upload results to s3 bucket
         run: |
           aws s3 cp results.sarif s3://${{ secrets.S3_BUCKET_NAME }}/${{ github.repository }}/${{ github.run_id }}-${{ github.run_attempt }}/
+        if: failure()
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
         uses: github/codeql-action/upload-sarif@v2
         with:

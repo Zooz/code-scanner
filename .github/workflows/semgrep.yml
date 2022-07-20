@@ -43,7 +43,7 @@ jobs:
           rm -rf code-scanner/
       - name: Generate 1 semgrep config named `semgrepRulles.yml`
         run: |
-          pip install pyyaml
+          pip install pyyaml awscli
           python scripts/config_combiner.py
       - name: Run semgrep
         run: semgrep ci --sarif -o results.sarif --config semgrep_rules/semgrepRulles.yml

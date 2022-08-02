@@ -2,7 +2,12 @@
 
 ## This template uses 2 inputs:
   * `codeScannerRef`: The branch or tag to use. (Optional)
-  * `slackUrl`: The slack webhook to send alerts to. (Mandatory)
+
+## This template expects 4 mandatory secrets
+  * `slackUrl`: The slack webhook to send alerts to.
+  * `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`: Required for authentication with AWS in order to upload results to s3 bucket.  
+  * `S3_BUCKET_NAME`: The s3 bucket which results will be uploaded to.
+  * `AWS_REGION`: The region the s3 was deployed in.
 
 ## Example usage:
 

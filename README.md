@@ -11,6 +11,9 @@
 
 ## Example usage:
 
+Create the next file structure in your repository `.github/workflows/scanner.yml`
+Enter the next into the file `scanner.yml`
+
 ```
 name: Code Scanner
 
@@ -25,5 +28,9 @@ jobs:
     with:
       codeScannerRef: main
     secrets:
-      slackUrl: ${{ secrets.SLACK_WEBHOOK }}
+      slackUrl: ${{ secrets.SEMGREP_SLACK_ALERT }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
 ```

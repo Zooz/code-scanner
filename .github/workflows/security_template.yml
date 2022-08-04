@@ -75,15 +75,15 @@ jobs:
         if: always()
   Secret_Detection:
     name: gitleaks
-    permissions:
-      contents: read # for actions/checkout to fetch code
-      actions: read
+    # permissions:
+    #   contents: read # for actions/checkout to fetch code
+    #   actions: read
     runs-on: ubuntu-latest
     container:
       image: zricethezav/gitleaks:latest
     steps:
       - uses: actions/checkout@v3
       - name: Run gitleaks secret detection scan
-        run: gitleaks detect . -f sarif
+        run: detect . -f sarif
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

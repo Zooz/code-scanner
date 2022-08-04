@@ -73,17 +73,3 @@ jobs:
         with:
           sarif_file: results.sarif
         if: always()
-  Secret_Detection:
-    name: gitleaks
-    # needs: semgrep
-    # if: always()
-    runs-on: ubuntu-latest
-    container:
-      image: zricethezav/gitleaks:latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run gitleaks secret detection scan
-        run: detect . -f sarif
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: always()

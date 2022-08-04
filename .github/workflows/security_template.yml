@@ -20,63 +20,63 @@ on:
         required: true
 
 jobs:
-  semgrep:
-    name: Scan
-    permissions:
-      contents: read # for actions/checkout to fetch code
-      actions: read
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-    runs-on: ubuntu-latest
-    container:
-      image: returntocorp/semgrep
-    if: (github.actor != 'dependabot[bot]') # Skip any PR created by dependabot to avoid permission issues
-    steps:
-      - name: Fetch project source with GitHub Actions Checkout.
-        uses: actions/checkout@v3
-      - name: Pull semgrep rule repo
-        run: |
-          git clone https://github.com/Zooz/code-scanner.git
-          cd code-scanner
-          git checkout ${{ inputs.codeScannerRef }}
-          cp -r * ../
-          cd ..
-          rm -rf code-scanner/
-      - name: Generate 1 semgrep config named `semgrepRulles.yml`
-        run: |
-          pip install pyyaml awscli
-          python scripts/config_combiner.py
-      - name: Run semgrep
-        run: semgrep ci --sarif -o results.sarif --config semgrep_rules/semgrepRulles.yml
-      - name: Send Slack notification
-        run: |
-          python scripts/slack.py \
-            --url "${{ secrets.slackUrl }}" \
-            --title "Github Action Code Scan" \
-            --message "Repo: \`${{ github.repository }}\`, has failed the semgrep scan" \
-            --username "Github Actions" \
-            --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            --branch "${GITHUB_REF##*/}"
-        if: failure()
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-        if: failure()
-      - name: Upload results to s3 bucket
-        run: |
-          aws s3 cp results.sarif s3://${{ secrets.S3_BUCKET_NAME }}/${{ github.repository }}/${{ github.run_id }}-${{ github.run_attempt }}/
-        if: failure()
-      - name: Upload SARIF file for GitHub Advanced Security Dashboard
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: results.sarif
-        if: always()
+  # semgrep:
+  #   name: Scan
+  #   permissions:
+  #     contents: read # for actions/checkout to fetch code
+  #     actions: read
+  #     security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: returntocorp/semgrep
+  #   if: (github.actor != 'dependabot[bot]') # Skip any PR created by dependabot to avoid permission issues
+  #   steps:
+  #     - name: Fetch project source with GitHub Actions Checkout.
+  #       uses: actions/checkout@v3
+  #     - name: Pull semgrep rule repo
+  #       run: |
+  #         git clone https://github.com/Zooz/code-scanner.git
+  #         cd code-scanner
+  #         git checkout ${{ inputs.codeScannerRef }}
+  #         cp -r * ../
+  #         cd ..
+  #         rm -rf code-scanner/
+  #     - name: Generate 1 semgrep config named `semgrepRulles.yml`
+  #       run: |
+  #         pip install pyyaml awscli
+  #         python scripts/config_combiner.py
+  #     - name: Run semgrep
+  #       run: semgrep ci --sarif -o results.sarif --config semgrep_rules/semgrepRulles.yml
+  #     - name: Send Slack notification
+  #       run: |
+  #         python scripts/slack.py \
+  #           --url "${{ secrets.slackUrl }}" \
+  #           --title "Github Action Code Scan" \
+  #           --message "Repo: \`${{ github.repository }}\`, has failed the semgrep scan" \
+  #           --username "Github Actions" \
+  #           --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+  #           --branch "${GITHUB_REF##*/}"
+  #       if: failure()
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+  #       if: failure()
+  #     - name: Upload results to s3 bucket
+  #       run: |
+  #         aws s3 cp results.sarif s3://${{ secrets.S3_BUCKET_NAME }}/${{ github.repository }}/${{ github.run_id }}-${{ github.run_attempt }}/
+  #       if: failure()
+  #     - name: Upload SARIF file for GitHub Advanced Security Dashboard
+  #       uses: github/codeql-action/upload-sarif@v2
+  #       with:
+  #         sarif_file: results.sarif
+  #       if: always()
   Secret_Detection:
     name: gitleaks
-    needs: semgrep
-    if: always()
+    # needs: semgrep
+    # if: always()
     runs-on: ubuntu-latest
     container:
       image: zricethezav/gitleaks:latest

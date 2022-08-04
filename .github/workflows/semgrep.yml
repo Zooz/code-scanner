@@ -1,4 +1,4 @@
-name: Security Template
+name: Semgrep
 
 on:
   workflow_call:
@@ -21,7 +21,7 @@ on:
 
 jobs:
   semgrep:
-    name: Scan
+    name: semgrep
     permissions:
       contents: read # for actions/checkout to fetch code
       actions: read

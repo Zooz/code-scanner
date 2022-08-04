@@ -1,4 +1,4 @@
-name: Semgrep
+name: Security Template
 
 on:
   workflow_call:
@@ -73,3 +73,14 @@ jobs:
         with:
           sarif_file: results.sarif
         if: always()
+  Secret_Detection:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Only required for Organizations, not personal accounts.

@@ -76,6 +76,7 @@ jobs:
   Secret_Detection:
     name: gitleaks
     needs: semgrep
+    if: always()
     runs-on: ubuntu-latest
     container:
       image: zricethezav/gitleaks:latest

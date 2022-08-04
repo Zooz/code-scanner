@@ -75,6 +75,10 @@ jobs:
         if: always()
   Secret_Detection:
     name: gitleaks
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      actions: read
+
     runs-on: ubuntu-latest
     container:
       image: zricethezav/gitleaks:latest

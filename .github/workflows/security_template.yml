@@ -75,14 +75,12 @@ jobs:
         if: always()
   Secret_Detection:
     name: gitleaks
-    # permissions:
-    #   contents: read # for actions/checkout to fetch code
-    #   actions: read
+    needs: semgrep
     runs-on: ubuntu-latest
     container:
       image: zricethezav/gitleaks:latest
     steps:
-      # - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: Run gitleaks secret detection scan
         run: detect . -f sarif
         env: 

@@ -82,7 +82,7 @@ jobs:
     container:
       image: zricethezav/gitleaks:latest
     steps:
-      - uses: actions/checkout@v3
+      # - uses: actions/checkout@v3
       - name: Run gitleaks secret detection scan
         run: detect . -f sarif
         env: 

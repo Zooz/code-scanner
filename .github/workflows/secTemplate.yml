@@ -125,3 +125,17 @@ jobs:
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --branch "${GITHUB_REF##*/}"
         if: failure()
+
+  dependency_scanner:
+    name: gemnasium
+    runs-on: ubuntu-latest
+    container:
+      image: registry.gitlab.com/security-products/gemnasium
+    if: (github.actor != 'dependabot[bot]') # Skip any PR created by dependabot to avoid permission issues
+    steps:
+      - name: Fetch project source with GitHub Actions Checkout.
+        uses: actions/checkout@v3
+      - name: Run Analyzer
+        run: /analyzer run --target-dir . 
+      - name: Show directory content
+        run: ls

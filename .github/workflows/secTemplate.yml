@@ -120,4 +120,4 @@ jobs:
             --username "Github Actions" \
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --branch "${GITHUB_REF##*/}"
-        if: failure()
+        # if: failure()

@@ -93,9 +93,6 @@ jobs:
           rm -rf gitleaks
       - name: Run gitleaks secret detection scan
         run: gitleaks detect --no-git -f sarif -r gitleaks_report.sarif 
-      - name: Print results in case it fails 
-        run: cat gitleaks_report.sarif 
-        if: failure()
       - name: Install aws cli
         run: |
           apt update

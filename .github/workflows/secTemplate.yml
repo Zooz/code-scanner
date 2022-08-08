@@ -51,7 +51,7 @@ jobs:
         run: |
           python scripts/slack.py \
             --url "${{ secrets.slackUrl }}" \
-            --title "Github Action Code Scan" \
+            --title "Github Action Semgrep" \
             --message "Repo: \`${{ github.repository }}\`, has failed the semgrep scan" \
             --username "Github Actions" \
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
@@ -73,6 +73,7 @@ jobs:
         with:
           sarif_file: results.sarif
         if: always()
+        
   secret_detection:
     name: gitleaks
     runs-on: ubuntu-latest
@@ -110,4 +111,14 @@ jobs:
         if: failure()
       - name: Upload results to s3 bucket
         run: aws s3 cp gitleaks_report.sarif s3://${{ secrets.S3_BUCKET_NAME }}/${{ github.repository }}/${{ github.run_id }}-${{ github.run_attempt }}/
+        if: failure()
+      - name: Send Slack notification
+        run: |
+          python scripts/slack.py \
+            --url "${{ secrets.slackUrl }}" \
+            --title "Github Action Secret Detector" \
+            --message "Repo: \`${{ github.repository }}\`, has failed the semgrep scan" \
+            --username "Github Actions" \
+            --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --branch "${GITHUB_REF##*/}"
         if: failure()

@@ -136,6 +136,8 @@ jobs:
       - name: Fetch project source with GitHub Actions Checkout.
         uses: actions/checkout@v3
       - name: Run Analyzer
-        run: /analyzer run --target-dir . 
-      - name: Show directory content
-        run: ls
+        run: /analyzer run
+      - name: Show results
+        run: |
+          apk add jq
+          cat gl-dependency-scanning-report.json | jq '.vulnerabilities[].cve'

@@ -117,7 +117,7 @@ jobs:
           python scripts/slack.py \
             --url "${{ secrets.slackUrl }}" \
             --title "Github Action Secret Detector" \
-            --message "Repo: \`${{ github.repository }}\`, has failed the semgrep scan" \
+            --message "Repo: \`${{ github.repository }}\`, has failed the secret detection scan" \
             --username "Github Actions" \
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --branch "${GITHUB_REF##*/}"

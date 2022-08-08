@@ -1,1 +1,2 @@
 semgrep_rules/*
+*.sarif

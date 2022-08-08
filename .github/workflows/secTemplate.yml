@@ -141,3 +141,29 @@ jobs:
         run: |
           apk add jq
           cat gl-dependency-scanning-report.json | jq '.vulnerabilities[].cve'
+      - name: decide if to fail the action
+        run: |
+          NUM=$(cat gl-dependency-scanning-report.json | jq '.vulnerabilities[].cve' | wc -l)
+          if [ $NUM == 0 ];then 
+            echo "Scan ended without any result" 
+          else
+            echo "Scan found vulnerable dependencies"
+            exit 1
+          fi
+      - name: Send Slack notification
+        run: |
+          git clone https://github.com/Zooz/code-scanner.git
+          cd code-scanner
+          git checkout ${{ inputs.codeScannerRef }}
+          cp -r * ../
+          cd ..
+          rm -rf code-scanner/
+          pip install requests
+          python3 scripts/slack.py \
+            --url "${{ secrets.slackUrl }}" \
+            --title "Github Action Dependency Detector" \
+            --message "Repo: \`${{ github.repository }}\`, has failed the dependency scan" \
+            --username "Github Actions" \
+            --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --branch "${GITHUB_REF##*/}"
+        if: failure()

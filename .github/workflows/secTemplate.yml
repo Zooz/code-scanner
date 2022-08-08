@@ -141,13 +141,15 @@ jobs:
         run: |
           apk add jq
           cat gl-dependency-scanning-report.json | jq '.vulnerabilities[].cve'
-      - name: decide if to fail the action
+      - name: Check Results
         run: |
           NUM=$(cat gl-dependency-scanning-report.json | jq '.vulnerabilities[].cve' | wc -l)
           if [ $NUM == 0 ];then 
             echo "Scan ended without any result" 
           else
             echo "Scan found vulnerable dependencies"
+            echo "Full report is:"
+            cat gl-dependency-scanning-report.json
             exit 1
           fi
       - name: Send Slack notification

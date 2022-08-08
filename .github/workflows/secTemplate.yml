@@ -21,7 +21,7 @@ on:
 
 jobs:
   semgrep:
-    name: Scan
+    name: semgrep
     permissions:
       contents: read # for actions/checkout to fetch code
       actions: read
@@ -51,7 +51,7 @@ jobs:
         run: |
           python scripts/slack.py \
             --url "${{ secrets.slackUrl }}" \
-            --title "Github Action Code Scan" \
+            --title "Github Action Semgrep" \
             --message "Repo: \`${{ github.repository }}\`, has failed the semgrep scan" \
             --username "Github Actions" \
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
@@ -73,3 +73,55 @@ jobs:
         with:
           sarif_file: results.sarif
         if: always()
+        
+  secret_detection:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    container:
+      image: golang:1.19.0
+    if: (github.actor != 'dependabot[bot]') # Skip any PR created by dependabot to avoid permission issues
+    steps:
+      - name: Fetch project source with GitHub Actions Checkout.
+        uses: actions/checkout@v3
+      - name: Install gitleaks
+        run: |
+          git clone https://github.com/zricethezav/gitleaks.git
+          cd gitleaks
+          make build
+          mv gitleaks /usr/local/bin
+          cd ..
+          rm -rf gitleaks
+      - name: Run gitleaks secret detection scan
+        run: gitleaks detect --no-git -f sarif -r gitleaks_report.sarif 
+      - name: Install aws cli
+        run: |
+          apt update
+          apt install -yq python3-pip
+          pip install awscli requests
+        if: failure()
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+        if: failure()
+      - name: Upload results to s3 bucket
+        run: aws s3 cp gitleaks_report.sarif s3://${{ secrets.S3_BUCKET_NAME }}/${{ github.repository }}/${{ github.run_id }}-${{ github.run_attempt }}/
+        if: failure()
+      - name: Send Slack notification
+        run: |
+          git clone https://github.com/Zooz/code-scanner.git
+          cd code-scanner
+          git checkout ${{ inputs.codeScannerRef }}
+          cp -r * ../
+          cd ..
+          rm -rf code-scanner/
+          python3 scripts/slack.py \
+            --url "${{ secrets.slackUrl }}" \
+            --title "Github Action Secret Detector" \
+            --message "Repo: \`${{ github.repository }}\`, has failed the secret detection scan" \
+            --username "Github Actions" \
+            --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --branch "${GITHUB_REF##*/}"
+        if: failure()

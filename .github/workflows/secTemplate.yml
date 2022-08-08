@@ -125,3 +125,47 @@ jobs:
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --branch "${GITHUB_REF##*/}"
         if: failure()
+
+  dependency_scanner:
+    name: gemnasium
+    runs-on: ubuntu-latest
+    container:
+      image: registry.gitlab.com/security-products/gemnasium
+    if: (github.actor != 'dependabot[bot]') # Skip any PR created by dependabot to avoid permission issues
+    steps:
+      - name: Fetch project source with GitHub Actions Checkout.
+        uses: actions/checkout@v3
+      - name: Run Analyzer
+        run: /analyzer run
+      - name: Show results
+        run: |
+          apk add jq
+          cat gl-dependency-scanning-report.json | jq '.vulnerabilities[].cve'
+      - name: Check Results
+        run: |
+          NUM=$(cat gl-dependency-scanning-report.json | jq '.vulnerabilities[].cve' | wc -l)
+          if [ $NUM == 0 ];then 
+            echo "Scan ended without any result" 
+          else
+            echo "Scan found vulnerable dependencies"
+            echo "Full report is:"
+            cat gl-dependency-scanning-report.json
+            exit 1
+          fi
+      - name: Send Slack notification
+        run: |
+          git clone https://github.com/Zooz/code-scanner.git
+          cd code-scanner
+          git checkout ${{ inputs.codeScannerRef }}
+          cp -r * ../
+          cd ..
+          rm -rf code-scanner/
+          pip install requests
+          python3 scripts/slack.py \
+            --url "${{ secrets.slackUrl }}" \
+            --title "Github Action Dependency Detector" \
+            --message "Repo: \`${{ github.repository }}\`, has failed the dependency scan" \
+            --username "Github Actions" \
+            --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --branch "${GITHUB_REF##*/}"
+        if: failure()

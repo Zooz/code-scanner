@@ -111,7 +111,7 @@ jobs:
         if: failure()
       - name: Send Slack notification
         run: |
-          python scripts/slack.py \
+          python3 scripts/slack.py \
             --url "${{ secrets.slackUrl }}" \
             --title "Github Action Secret Detector" \
             --message "Repo: \`${{ github.repository }}\`, has failed the secret detection scan" \

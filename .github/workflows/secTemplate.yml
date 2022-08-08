@@ -97,7 +97,7 @@ jobs:
         run: |
           apt update
           apt install -yq python3-pip
-          pip install awscli
+          pip install awscli requests
         if: failure()
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

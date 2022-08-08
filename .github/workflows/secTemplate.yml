@@ -76,6 +76,8 @@ jobs:
         
   secret_detection:
     name: gitleaks
+    permissions:
+      contents: read # for actions/checkout to fetch code
     runs-on: ubuntu-latest
     container:
       image: golang:1.19.0

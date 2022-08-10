@@ -1,5 +1,11 @@
 # Code Scanner
 
+## The template performs 3 operations:
+  1. Vulnerabilities Scan- using Semgrep  
+  2. Secret Detection- using Gitleaks
+  3. Dependency Scan- using gemnasium
+
+
 ## This template uses 2 inputs:
   * `codeScannerRef`: The branch or tag to use. (Optional)
 
@@ -22,11 +28,11 @@ on:
     branches: 
       - '*'
 jobs:
-  trigger-semgrep:
-    name: Scan
-    uses: Zooz/code-scanner/.github/workflows/semgrep.yml@main
+  secScan:
+    name: Security Template
+    uses: Zooz/code-scanner/.github/workflows/secTemplate.yml@add_actions
     with:
-      codeScannerRef: main
+      codeScannerRef: add_actions
     secrets:
       slackUrl: ${{ secrets.SEMGREP_SLACK_ALERT }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

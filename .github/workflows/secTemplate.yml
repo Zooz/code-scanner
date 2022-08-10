@@ -66,6 +66,7 @@ jobs:
         if: failure()
       - name: Upload results to s3 bucket
         run: |
+          apk add -q jq
           jq 'del(.runs[].tool.driver.rules)' temp_results.sarif > results.sarif
           aws s3 cp results.sarif s3://${{ secrets.S3_BUCKET_NAME }}/${{ github.repository }}/${{ github.run_id }}-${{ github.run_attempt }}/
         if: failure()

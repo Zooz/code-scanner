@@ -30,9 +30,9 @@ on:
 jobs:
   secScan:
     name: Security Template
-    uses: Zooz/code-scanner/.github/workflows/secTemplate.yml@add_actions
+    uses: Zooz/code-scanner/.github/workflows/secTemplate.yml@main
     with:
-      codeScannerRef: add_actions
+      codeScannerRef: main
     secrets:
       slackUrl: ${{ secrets.SEMGREP_SLACK_ALERT }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

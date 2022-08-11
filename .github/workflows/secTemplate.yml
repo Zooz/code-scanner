@@ -10,6 +10,8 @@ on:
     secrets:
       slackUrl:
         required: true
+      SLACK_CHANNEL:
+        required: true
       AWS_ACCESS_KEY_ID:
         required: true
       AWS_SECRET_ACCESS_KEY:
@@ -55,7 +57,8 @@ jobs:
             --message "Repo: \`${{ github.repository }}\`, has failed the semgrep scan" \
             --username "Github Actions" \
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            --branch "${GITHUB_REF##*/}"
+            --branch "${GITHUB_REF##*/}" \
+            --channel "${{ secrets.SLACK_CHANNEL }}"
         if: failure()
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -125,7 +128,8 @@ jobs:
             --message "Repo: \`${{ github.repository }}\`, has failed the secret detection scan" \
             --username "Github Actions" \
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            --branch "${GITHUB_REF##*/}"
+            --branch "${GITHUB_REF##*/}" \
+            --channel "${{ secrets.SLACK_CHANNEL }}"
         if: failure()
 
   dependency_scanner:
@@ -169,5 +173,6 @@ jobs:
             --message "Repo: \`${{ github.repository }}\`, has failed the dependency scan" \
             --username "Github Actions" \
             --actionLink "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            --branch "${GITHUB_REF##*/}"
+            --branch "${GITHUB_REF##*/}" \
+            --channel "${{ secrets.SLACK_CHANNEL }}"
         if: failure()

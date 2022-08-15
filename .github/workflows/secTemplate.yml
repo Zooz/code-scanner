@@ -114,6 +114,12 @@ jobs:
       - name: Upload results to s3 bucket
         run: aws s3 cp gitleaks_report.sarif s3://${{ secrets.S3_BUCKET_NAME }}/${{ github.repository }}/${{ github.run_id }}-${{ github.run_attempt }}/
         if: failure()
+      - name: Print leak scan result
+        run: |
+          apt update -qq
+          apt install -yqq jq
+          cat gitleaks_report.sarif | jq .'runs[].results'
+        if: failure()
       - name: Send Slack notification
         run: |
           git clone https://github.com/Zooz/code-scanner.git
